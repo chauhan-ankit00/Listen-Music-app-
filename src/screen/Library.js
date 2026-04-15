@@ -3,13 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 
-export default function Home({ navigation }) {
+export default function Library({ navigation }) {
 
   
 
   return (
     <LinearGradient colors={['#00c6ff', '#c59dec']} style={styles.container}>
-      <Text style={styles.title}>Welcome 🎧</Text>
+      <Text style={styles.title}>Library 🎧</Text>
 
       
     </LinearGradient>
