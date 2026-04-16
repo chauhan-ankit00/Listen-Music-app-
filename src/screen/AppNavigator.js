@@ -6,6 +6,7 @@ import Splash from './Splash'
 import Login from './Login'
 import Home from './Home'
 import BottomTabs from './BottomTabs'
+import CategoryScreen from './CategoryScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -16,6 +17,7 @@ export default function AppNavigator() {
             <Stack.Screen name='Splash' component={require('./Splash').default} options={{headerShown: false}} />
             <Stack.Screen name='Login' component={require('./Login').default} options={{headerShown: false}} />
             <Stack.Screen name='Home' component={require('./BottomTabs').default} options={{headerShown: false}} />
+            <Stack.Screen name='Category' component={require('./CategoryScreen').default} options={{headerShown: false}} />
 
         </Stack.Navigator>
 

@@ -2,6 +2,11 @@ import { View, Text, StyleSheet,Button, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { supabase } from '../supabase/supabase'
 import LinearGradient from 'react-native-linear-gradient';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 
 export default function Profile() {
     const handleLogout = async () => {
@@ -17,7 +22,7 @@ export default function Profile() {
         }
       };
   return (
-    <LinearGradient  colors={['#00c6ff', '#c59dec']} style={styles.container}>
+    <LinearGradient  colors={['#00c6ff', '#c59dec']} style={{ flex: 1, paddingTop: wp('7%'), paddingHorizontal: wp('4%'), paddingBottom: hp('8%') }}>
       <Text>Profile</Text>
       <TouchableOpacity style={styles.button} onPress={handleLogout}>
               <Text style={styles.buttonText}>Logout</Text>
