@@ -94,10 +94,10 @@ export default function Home({ navigation }) {
                 horizontal
                 showsHorizontalScrollIndicator={false}
               >
-                {songs.map((item) => (
+                {songs.map((item, index) => (
                   <TouchableOpacity
                     key={item.id}
-                    onPress={() => playSong(item)}
+                    onPress={() => playSong(item, songs, index)} // ✅ FIX
                   >
                     <View style={styles.card}>
                       <Image

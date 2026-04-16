@@ -7,7 +7,7 @@ import Login from './Login'
 import Home from './Home'
 import BottomTabs from './BottomTabs'
 import CategoryScreen from './CategoryScreen'
-
+import PlayerScreen from './PlayerScreen'
 const Stack = createNativeStackNavigator()
 
 export default function AppNavigator() {
@@ -18,6 +18,7 @@ export default function AppNavigator() {
             <Stack.Screen name='Login' component={require('./Login').default} options={{headerShown: false}} />
             <Stack.Screen name='Home' component={require('./BottomTabs').default} options={{headerShown: false}} />
             <Stack.Screen name='Category' component={require('./CategoryScreen').default} options={{headerShown: false}} />
+            <Stack.Screen name='Player' component={require('./PlayerScreen').default} options={{headerShown: false}} />
 
         </Stack.Navigator>
 
