@@ -13,7 +13,7 @@ export default function Library({ navigation }) {
   
 
   return (
-    <LinearGradient colors={['#00c6ff', '#c59dec']} style={{ flex: 1, paddingTop: wp('7%'), paddingHorizontal: wp('4%'), paddingBottom: hp('8%') }}>
+    <LinearGradient colors={['#7209B7', '#3A0CA3', '#1E1E2F']} style={{ flex: 1, paddingTop: wp('7%'), paddingHorizontal: wp('4%'), paddingBottom: hp('8%') }}>
       <Text style={styles.title}>Library 🎧</Text>
 
       

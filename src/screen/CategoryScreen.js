@@ -1,71 +1,24 @@
-// import React, { useEffect, useState } from 'react';
-// import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
-// import { supabase } from '../supabase/supabase';
-// import { playSong } from './utils/player';
-// import LinearGradient from 'react-native-linear-gradient';
-// import {
-//   widthPercentageToDP as wp,
-//   heightPercentageToDP as hp,
-// } from 'react-native-responsive-screen';
-
-
-// export default function CategoryScreen({ route }) {
-//   const { category } = route.params;
-//   const [songs, setSongs] = useState([]);
-
-//   useEffect(() => {
-//     fetchSongs();
-//   }, []);
-
-//   const fetchSongs = async () => {
-//     const { data } = await supabase
-//       .from('songs_with_category')
-//       .select('*')
-//       .eq('category', category);
-
-//     setSongs(data);
-//   };
-
-//   return (
-//     <LinearGradient colors={['#00c6ff', '#c59dec']} style={{ flex: 1, paddingTop: wp('7%'), paddingHorizontal: wp('4%'), paddingBottom: hp('8%') }}>
-//  <FlatList
-//       data={songs}
-//       keyExtractor={(item) => item.id}
-//       renderItem={({ item }) => (
-//         <TouchableOpacity onPress={() => playSong(item.audio_url)}>
-//           <View style={{ flexDirection: 'row', margin: 10 }}>
-//             <Image
-//               source={{ uri: item.image_url }}
-//               style={{ width: 60, height: 60, borderRadius: 10 }}
-//             />
-//             <View style={{ marginLeft: 10 }}>
-//               <Text style={{ color: '#fff' }}>{item.title}</Text>
-//               <Text style={{ color: '#fff' }}>{item.artist}</Text>
-//             </View>
-//           </View>
-//         </TouchableOpacity>
-//       )}
-      
-//     />
-    
-//     </LinearGradient>
-   
-//   );
-// }
-
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { supabase } from '../supabase/supabase';
 import { playSong } from './utils/player';
-import LinearGradient from 'react-native-linear-gradient';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-export default function CategoryScreen({ route }) {
+export default function CategoryScreen({ route, navigation }) {
   const { category } = route.params;
   const [songs, setSongs] = useState([]);
 
@@ -84,26 +37,65 @@ export default function CategoryScreen({ route }) {
 
   return (
     <LinearGradient
-      colors={['#00c6ff', '#c59dec']}
-     style={{ flex: 1, paddingTop: wp('7%'), paddingHorizontal: wp('4%'), paddingBottom: hp('8%') }}
-
+      colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
+      style={{
+        flex: 1,
+        paddingTop: hp('5%'),
+        paddingHorizontal: wp('4%'),
+      }}
     >
-      <Text style={{color:'#fff', fontSize:18, fontWeight:'bold'}}>{category}</Text>
-      
+
+      {/* 🔥 HEADER */}
+      <View style={{ marginBottom: hp('2%') }}>
+        
+        {/* Back Arrow */}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={wp('7%')} color="#fff" />
+        </TouchableOpacity>
+
+        {/* Center Image + Title */}
+        <View style={{ alignItems: 'center', marginTop: hp('1%') }}>
+          <Image
+            source={{ uri: songs[0]?.image_url }}
+            style={{
+              width: wp('50%'),
+              height: wp('50%'),
+              borderRadius: wp('5%'),
+            }}
+          />
+
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: wp('6%'),
+              fontWeight: 'bold',
+              marginTop: hp('1%'),
+              textTransform: 'capitalize',
+            }}
+          >
+            {category}
+          </Text>
+        </View>
+      </View>
+
+      {/* 🎵 SONG LIST */}
       <FlatList
         data={songs}
-        keyExtractor={(item) => item.id} 
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        
+        contentContainerStyle={{ paddingBottom: hp('10%') }}
+
         renderItem={({ item, index }) => (
           <TouchableOpacity
-            onPress={() => playSong(item, songs, index)} // ✅ FIX
+            onPress={() => playSong(item, songs, index)}
           >
             <View
               style={{
                 flexDirection: 'row',
-                marginBottom: hp('2%'),
                 alignItems: 'center',
+                marginBottom: hp('2%'),
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                borderRadius: wp('3%'),
               }}
             >
               {/* 🎧 Image */}
@@ -119,10 +111,7 @@ export default function CategoryScreen({ route }) {
               {/* 🎵 Info */}
               <View style={{ marginLeft: wp('4%'), flex: 1 }}>
                 <Text
-                  style={{
-                    color: '#fff',
-                    fontSize: wp('4%'),
-                  }}
+                  style={{ color: '#fff', fontSize: wp('4%') }}
                   numberOfLines={1}
                 >
                   {item.title}
@@ -139,6 +128,20 @@ export default function CategoryScreen({ route }) {
                   {item.artist}
                 </Text>
               </View>
+
+              {/* ⋮ THREE DOT MENU */}
+              <TouchableOpacity
+                onPress={(e) => {
+                  e.stopPropagation(); // prevent song play
+                  console.log('Options for:', item.title);
+                }}
+              >
+                <Icon
+                  name="ellipsis-vertical"
+                  size={wp('5%')}
+                  color="#fff"
+                />
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         )}

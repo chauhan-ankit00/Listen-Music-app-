@@ -37,24 +37,40 @@ export default function Home({ navigation }) {
     }
   };
 
-  const getByCategory = (cat) => {
+  const getByCategory = cat => {
     return data.filter(item => item.category === cat);
   };
 
   return (
     <LinearGradient
-      colors={['#00c6ff', '#c59dec']}
-      style={{ flex: 1, paddingTop: wp('7%'), paddingHorizontal: wp('4%'), paddingBottom: hp('8%') }}
+      colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
+      style={{
+        flex: 1,
+        paddingTop: wp('7%'),
+        paddingHorizontal: wp('4%'),
+        paddingBottom: hp('8%'),
+      }}
     >
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Image
+            source={require('../assets/profile.png')} //  logo path
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: wp('0%') }}
       >
-
         {/* TOP CARDS */}
         <View style={styles.topRow}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Category', { category: 'party' })}
+            onPress={() =>
+              navigation.navigate('Category', { category: 'party' })
+            }
           >
             <ImageBackground
               source={{ uri: getByCategory('party')[0]?.image_url }}
@@ -66,7 +82,9 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('Category', { category: 'romantic' })}
+            onPress={() =>
+              navigation.navigate('Category', { category: 'romantic' })
+            }
           >
             <ImageBackground
               source={{ uri: getByCategory('romantic')[0]?.image_url }}
@@ -79,7 +97,7 @@ export default function Home({ navigation }) {
         </View>
 
         {/* SECTIONS */}
-        {['trending', 'latest', 'punjabi', 'haryanvi'].map((cat) => {
+        {['trending', 'latest', 'punjabi', 'haryanvi'].map(cat => {
           const songs = getByCategory(cat);
 
           if (songs.length === 0) return null;
@@ -87,13 +105,12 @@ export default function Home({ navigation }) {
           return (
             <View key={cat}>
               <Text style={styles.title}>
-                {cat === 'latest' ? 'Latest Release' : cat.toUpperCase()}
+                {cat === 'latest'
+                  ? 'Latest Release'
+                  : cat.charAt(0).toUpperCase() + cat.slice(1)}
               </Text>
 
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              >
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {songs.map((item, index) => (
                   <TouchableOpacity
                     key={item.id}
@@ -114,13 +131,22 @@ export default function Home({ navigation }) {
             </View>
           );
         })}
-
       </ScrollView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: hp('1%'),
+  },
+
+  logo: {
+    width: wp('10%'),
+    height: wp('10%'),
+  },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

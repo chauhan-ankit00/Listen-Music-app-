@@ -1,74 +1,3 @@
-// import React from 'react';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import Icon from 'react-native-vector-icons/Ionicons';
-
-
-// import {
-//   widthPercentageToDP as wp,
-//   heightPercentageToDP as hp,
-// } from 'react-native-responsive-screen';
-
-// import HomeStack from './HomeStack';
-// import Search from './Search';
-// import Library from './Library';
-// import Profile from './Profile';
-// import MiniPlayer from './utils/MiniPlayer';
-
-// const Tab = createBottomTabNavigator();
-
-// export default function BottomTabs() {
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => ({
-//         headerShown: false,
-
-//         tabBarIcon: ({ focused, color }) => {
-//           let iconName;
-
-//           if (route.name === 'Home') {
-//             iconName = focused ? 'home' : 'home-outline';
-//           } else if (route.name === 'Search') {
-//             iconName = focused ? 'search' : 'search-outline';
-//           } else if (route.name === 'Library') {
-//             iconName = focused ? 'library' : 'library-outline';
-//           } else if (route.name === 'Profile') {
-//             iconName = focused ? 'person' : 'person-outline';
-//           }
-
-//           return (
-//             <Icon
-//               name={iconName}
-//               size={wp('6%')}   // 👈 responsive icon size
-//               color={color}
-//             />
-//           );
-//         },
-
-//         tabBarActiveTintColor: '#000',
-//         tabBarInactiveTintColor: '#fff',
-
-//         tabBarStyle: {
-//           height: hp('8%'),           // 👈 responsive height
-//           paddingBottom: hp('1%'),    // 👈 responsive padding
-//           borderTopLeftRadius: wp('5%'),
-//           borderTopRightRadius: wp('5%'),
-//           position: 'absolute',
-//           backgroundColor:'transparent'
-//         },
-
-//         tabBarLabelStyle: {
-//           fontSize: wp('3.2%'),       // 👈 responsive font
-//           marginBottom: hp('0.5%'),
-//         },
-//       })}
-//     >
-//       <Tab.Screen name="Home" component={HomeStack} />
-//       <Tab.Screen name="Search" component={Search} />
-//       <Tab.Screen name="Library" component={Library} />
-//       <Tab.Screen name="Profile" component={Profile} />
-//     </Tab.Navigator>
-//   );
-// }
 
 
 import React from 'react';
@@ -89,16 +18,20 @@ import MiniPlayer from './utils/MiniPlayer';
 
 const Tab = createBottomTabNavigator();
 
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export default function BottomTabs() {
+  const insets = useSafeAreaInsets(); // 👈 ADD THIS
+
   return (
     <View style={{ flex: 1 }}>
       
-      {/* TABS */}
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
 
-          tabBarIcon: ({ focused, color }) => {
+          tabBarIcon: ({ focused }) => {
             let iconName;
 
             if (route.name === 'Home') {
@@ -114,27 +47,28 @@ export default function BottomTabs() {
             return (
               <Icon
                 name={iconName}
-                size={wp('6%')}
-                color={color}
+                size={focused ? wp('7%') : wp('6%')}
+                color="#fff"
+                style={{ transform: [{ scale: focused ? 1.1 : 1 }] }}
               />
             );
           },
 
-          tabBarActiveTintColor: '#000',
+          tabBarActiveTintColor: '#fff',
           tabBarInactiveTintColor: '#fff',
 
           tabBarStyle: {
-            height: hp('8%'),
-            paddingBottom: hp('1%'),
-            borderTopLeftRadius: wp('5%'),
-            borderTopRightRadius: wp('5%'),
+            height: hp('8%') + insets.bottom, // 🔥 FIX
+            paddingBottom: insets.bottom,     // 🔥 FIX
+            backgroundColor: 'rgba(0,0,0,0.4)',
             position: 'absolute',
-            backgroundColor: 'rgba(255,255,255,0.2)', // better visibility
+            borderTopWidth: 0,
           },
 
           tabBarLabelStyle: {
             fontSize: wp('3.2%'),
             marginBottom: hp('0.5%'),
+            color: '#fff',
           },
         })}
       >
@@ -144,9 +78,7 @@ export default function BottomTabs() {
         <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
 
-      {/* 🔥 MINI PLAYER (GLOBAL) */}
       <MiniPlayer />
-
     </View>
   );
 }
