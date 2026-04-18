@@ -69,15 +69,15 @@ export default function Home({ navigation }) {
         <View style={styles.topRow}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('Category', { category: 'party' })
+              navigation.navigate('Category', { category: 'pop mix' })
             }
           >
             <ImageBackground
-              source={{ uri: getByCategory('party')[0]?.image_url }}
+              source={{ uri: getByCategory('pop mix')[0]?.image_url }}
               style={styles.bigCard}
               imageStyle={styles.radius}
             >
-              <Text style={styles.bigText}>Party Hits</Text>
+              <Text style={styles.bigText}>Pop Mix</Text>
             </ImageBackground>
           </TouchableOpacity>
 
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
 
   radius: {
-    borderRadius: wp('5%'),
+    borderRadius: wp('2%'),
   },
 
   title: {
