@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -22,7 +20,7 @@ const Tab = createBottomTabNavigator();
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function BottomTabs() {
-  const insets = useSafeAreaInsets(); // 👈 ADD THIS
+  const insets = useSafeAreaInsets(); 
 
   return (
     <View style={{ flex: 1 }}>
@@ -58,8 +56,8 @@ export default function BottomTabs() {
           tabBarInactiveTintColor: '#fff',
 
           tabBarStyle: {
-            height: hp('8%') + insets.bottom, // 🔥 FIX
-            paddingBottom: insets.bottom,     // 🔥 FIX
+            height: hp('8%') + insets.bottom, //  FIX
+            paddingBottom: insets.bottom,     //  FIX
             backgroundColor: 'rgba(0,0,0,0.4)',
             position: 'absolute',
             borderTopWidth: 0,

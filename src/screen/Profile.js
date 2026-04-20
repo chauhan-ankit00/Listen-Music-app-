@@ -18,7 +18,7 @@ import {
 import { supabase } from '../supabase/supabase';
 
 export default function Profile() {
-  const navigation = useNavigation(); // ✅ FIXED
+  const navigation = useNavigation(); 
 
   const handleLogout = async () => {
     try {
@@ -28,7 +28,7 @@ export default function Profile() {
         Alert.alert('Error', error.message);
       } else {
         Alert.alert('Success', 'Logged out successfully');
-        navigation.replace('Login'); // ✅ redirect to login
+        navigation.replace('Login'); //  redirect to login
       }
     } catch (err) {
       Alert.alert('Error', 'Something went wrong');

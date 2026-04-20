@@ -43,33 +43,61 @@
 import { View, ImageBackground, StyleSheet, ActivityIndicator } from 'react-native';
 import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { supabase } from '../supabase';
+import { supabase } from '../supabase/supabase';
 
 export default function Splash() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    checkUser();
-  }, []);
+    let isMounted = true;
+    let hasNavigated = false;
+    const splashStart = Date.now();
+    const MIN_SPLASH_MS = 1200;
 
-  const checkUser = async () => {
-    try {
-      const { data } = await supabase.auth.getSession();
+    const navigateWithDelay = session => {
+      if (hasNavigated) {
+        return;
+      }
+      const elapsed = Date.now() - splashStart;
+      const waitTime = Math.max(MIN_SPLASH_MS - elapsed, 0);
 
-      // small delay for splash feel
       setTimeout(() => {
-        if (data.session) {
-          navigation.replace('Home');   // ✅ already logged in
-        } else {
-          navigation.replace('Login');  // ❌ not logged in
+        if (!isMounted || hasNavigated) {
+          return;
         }
-      }, 2000);
+        hasNavigated = true;
+        navigation.replace(session ? 'Home' : 'Login');
+      }, waitTime);
+    };
 
-    } catch (error) {
-      console.log(error);
-      navigation.replace('Login');
-    }
-  };
+    const bootstrapSession = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          console.log('Session restore error:', error.message);
+        }
+        navigateWithDelay(data?.session ?? null);
+      } catch (error) {
+        console.log(error);
+        navigateWithDelay(null);
+      }
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        navigateWithDelay(session);
+      }
+    });
+
+    bootstrapSession();
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <ImageBackground

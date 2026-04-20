@@ -5,7 +5,7 @@ Sound.setCategory('Playback');
 
 let sound = null;
 
-// 🔥 internal state
+//  internal state
 let currentState = {
   playlist: [],
   index: 0,

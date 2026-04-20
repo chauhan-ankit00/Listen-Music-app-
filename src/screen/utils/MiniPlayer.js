@@ -22,12 +22,12 @@ import { useNavigation } from '@react-navigation/native';
 export default function MiniPlayer() {
   const { currentSong, isPlaying } = usePlayer();
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets(); // 🔥 IMPORTANT
+  const insets = useSafeAreaInsets(); //  IMPORTANT
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  // 🎵 Progress
+  //  Progress
   useEffect(() => {
     const interval = setInterval(() => { 
       getCurrentTime((sec) => setProgress(sec || 0));
@@ -36,7 +36,7 @@ export default function MiniPlayer() {
     return () => clearInterval(interval);
   }, []);
 
-  // ⏱ Duration
+  //  Duration
   useEffect(() => {
     setDuration(getDuration() || 0);
   }, [currentSong]);
@@ -49,7 +49,7 @@ export default function MiniPlayer() {
       onPress={() => navigation.navigate('Player')}
       style={{
         position: 'absolute',
-        bottom: hp('8%') + insets.bottom, // ✅ FIXED
+        bottom: hp('8%') + insets.bottom, //  FIXED
         left: wp('3%'),
         right: wp('3%'),
         backgroundColor: 'rgba(0,0,0,0.8)',
@@ -57,7 +57,7 @@ export default function MiniPlayer() {
         padding: wp('3%'),
       }}
     >
-      {/* 🎵 Top Row */}
+      {/*  Top Row */}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         
         {/* Image */}
@@ -115,7 +115,7 @@ export default function MiniPlayer() {
         </View>
       </View>
 
-      {/* 🎚 Slider */}
+      {/*  Slider */}
       <Slider
         style={{ width: '100%', marginTop: hp('1%') }}
         minimumValue={0}

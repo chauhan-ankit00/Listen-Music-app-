@@ -114,7 +114,7 @@ export default function Home({ navigation }) {
                 {songs.map((item, index) => (
                   <TouchableOpacity
                     key={item.id}
-                    onPress={() => playSong(item, songs, index)} // ✅ FIX
+                    onPress={() => playSong(item, songs, index)} // FIX
                   >
                     <View style={styles.card}>
                       <Image

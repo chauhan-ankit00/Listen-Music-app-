@@ -22,7 +22,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // 🔐 LOGIN FUNCTION
+  //  LOGIN FUNCTION
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please enter email & password');
@@ -40,12 +40,12 @@ export default function Login({ navigation }) {
       // Alert.alert('Success', 'Logged in!');
       console.log('User:', data.user);
 
-      // 👉 Navigate to Home
+      //  Navigate to Home
       navigation.replace('Home');
     }
   };
 
-  // 📝 SIGNUP FUNCTION
+  //  SIGNUP FUNCTION
   const handleSignup = async () => {
     const { data, error } = await supabase.auth.signUp({
       email,

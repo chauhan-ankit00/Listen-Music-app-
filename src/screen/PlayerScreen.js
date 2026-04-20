@@ -44,9 +44,9 @@ export default function PlayerScreen() {
   const [playlists, setPlaylists] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [liked, setLiked] = useState(false); // ❤️ state
+  const [liked, setLiked] = useState(false); //  state
 
-  // 🎵 Progress
+  //  Progress
   useEffect(() => {
     const interval = setInterval(() => {
       getCurrentTime((sec) => setProgress(sec || 0));
@@ -54,12 +54,12 @@ export default function PlayerScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  // ⏱ Duration
+  //  Duration
   useEffect(() => {
     setDuration(getDuration() || 0);
   }, [currentSong]);
 
-  // ❤️ CHECK IF LIKED
+  //  CHECK IF LIKED
   useEffect(() => {
     checkIfLiked();
   }, [currentSong]);
@@ -89,7 +89,7 @@ export default function PlayerScreen() {
     setLiked(data.length > 0);
   };
 
-  // ❤️ TOGGLE LIKE
+  //  TOGGLE LIKE
   const handleLike = async () => {
     if (!song.id) return;
 
@@ -116,7 +116,7 @@ export default function PlayerScreen() {
     }
 
     if (liked) {
-      // ❌ remove like
+      //  remove like
       await supabase
         .from('playlist_songs')
         .delete()
@@ -125,7 +125,7 @@ export default function PlayerScreen() {
 
       setLiked(false);
     } else {
-      // ✅ add like (prevent duplicate)
+      //  add like (prevent duplicate)
       const { data } = await supabase
         .from('playlist_songs')
         .select('*')
@@ -145,7 +145,7 @@ export default function PlayerScreen() {
     }
   };
 
-  // ➕ FETCH PLAYLISTS
+  //  FETCH PLAYLISTS
   const fetchPlaylists = async () => {
     const {
       data: { user },
@@ -159,7 +159,7 @@ export default function PlayerScreen() {
     setPlaylists(data || []);
   };
 
-  // ➕ ADD SONG
+  //  ADD SONG
   const handleAddToPlaylist = async (playlistId) => {
     if (!song.id) return;
 

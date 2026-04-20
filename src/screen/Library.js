@@ -23,12 +23,12 @@ import { supabase } from '../supabase/supabase';
 
 export default function Library({ navigation }) {
 
-  // ✅ ALL HOOKS AT TOP (IMPORTANT)
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
   const [playlists, setPlaylists] = useState([]);
 
-  // ✅ FETCH PLAYLISTS
+  //  FETCH PLAYLISTS
   useEffect(() => {
     fetchPlaylists();
   }, []);
@@ -41,7 +41,7 @@ export default function Library({ navigation }) {
     const { data, error } = await supabase
       .from('playlists')
       .select('*')
-      .eq('user_id', user.id) // ✅ FILTER
+      .eq('user_id', user.id) // FILTER
       .order('created_at', { ascending: false });
 
     if (!error) {
@@ -49,7 +49,7 @@ export default function Library({ navigation }) {
     }
   };
 
-  // ✅ CREATE PLAYLIST
+  //  CREATE PLAYLIST
   const createPlaylist = async () => {
     if (!playlistName.trim()) {
       Alert.alert('Enter playlist name');
@@ -63,7 +63,7 @@ export default function Library({ navigation }) {
     const { error } = await supabase.from('playlists').insert([
       {
         name: playlistName,
-        user_id: user.id, // ✅ IMPORTANT
+        user_id: user.id, // IMPORTANT
       },
     ]);
 
@@ -76,16 +76,16 @@ export default function Library({ navigation }) {
     }
   };
 
-  // ✅ RETURN AFTER ALL HOOKS
+  //  RETURN AFTER ALL HOOKS
   return (
     <LinearGradient
       colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
       style={styles.container}
     >
-      {/* 🔥 HEADER */}
+      {/*  HEADER */}
       <View style={styles.header}>
 
-        {/* 👤 Profile */}
+        {/*  Profile */}
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
             source={require('../assets/profile.png')}
@@ -97,13 +97,13 @@ export default function Library({ navigation }) {
 
         <View style={{ flex: 1 }} />
 
-        {/* ➕ ADD BUTTON */}
+        {/*  ADD BUTTON */}
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Icon name="add" size={wp('7%')} color="#fff" />
         </TouchableOpacity>
       </View>
 
-      {/* 🎵 PLAYLIST LIST */}
+      {/*  PLAYLIST LIST */}
       <FlatList
         data={playlists}
         keyExtractor={(item) => item.id}
@@ -120,12 +120,12 @@ export default function Library({ navigation }) {
           >
             <View style={styles.playlistRow}>
 
-              {/* 🎧 Icon */}
+              {/*  Icon */}
               <View style={styles.playlistIcon}>
                 <Icon name="musical-notes" size={wp('6%')} color="#fff" />
               </View>
 
-              {/* 🎵 Info */}
+              {/*  Info */}
               <View style={{ marginLeft: wp('4%') }}>
                 <Text style={styles.playlistName}>{item.name}</Text>
                 <Text style={styles.playlistSub}>Playlist</Text>
@@ -136,7 +136,7 @@ export default function Library({ navigation }) {
         )}
       />
 
-      {/* 📝 MODAL */}
+      {/*  MODAL */}
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>

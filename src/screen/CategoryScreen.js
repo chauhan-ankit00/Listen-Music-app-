@@ -1,154 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import {
-//   View,
-//   Text,
-//   FlatList,
-//   Image,
-//   TouchableOpacity,
-// } from 'react-native';
-
-// import LinearGradient from 'react-native-linear-gradient';
-// import Icon from 'react-native-vector-icons/Ionicons';
-
-// import { supabase } from '../supabase/supabase';
-// import { playSong } from './utils/player';
-
-// import {
-//   widthPercentageToDP as wp,
-//   heightPercentageToDP as hp,
-// } from 'react-native-responsive-screen';
-
-// export default function CategoryScreen({ route, navigation }) {
-//   const { category, type, playlist } = route.params;
-
-//   const [songs, setSongs] = useState([]);
-
-//   useEffect(() => {
-//     if (type === 'playlist') {
-//       fetchPlaylistSongs();
-//     } else {
-//       fetchCategorySongs();
-//     }
-//   }, []);
-
-//   // 🎵 CATEGORY SONGS
-//   const fetchCategorySongs = async () => {
-//     const { data } = await supabase
-//       .from('songs_with_category')
-//       .select('*')
-//       .eq('category', category);
-
-//     setSongs(data || []);
-//   };
-
-//   // 🎵 PLAYLIST SONGS
-//   const fetchPlaylistSongs = async () => {
-//     const { data, error } = await supabase
-//       .from('playlist_songs')
-//       .select(`
-//         song_id,
-//         songs (
-//           id,
-//           title,
-//           artist,
-//           image_url,
-//           audio_url
-//         )
-//       `)
-//       .eq('playlist_id', playlist.id);
-
-//     if (!error && data) {
-//       const formatted = data.map(item => item.songs);
-//       setSongs(formatted);
-//     }
-//   };
-
-//   const title = type === 'playlist' ? playlist.name : category;
-
-//   return (
-//     <LinearGradient
-//       colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
-//       style={{
-//         flex: 1,
-//         paddingTop: hp('5%'),
-//         paddingHorizontal: wp('4%'),
-//       }}
-//     >
-//       {/* 🔥 HEADER */}
-//       <View style={{ marginBottom: hp('2%') }}>
-        
-//         <TouchableOpacity onPress={() => navigation.goBack()}>
-//           <Icon name="arrow-back" size={wp('7%')} color="#fff" />
-//         </TouchableOpacity>
-
-//         {/* Title */}
-//         <View style={{ alignItems: 'center', marginTop: hp('1%') }}>
-//           <Text
-//             style={{
-//               color: '#fff',
-//               fontSize: wp('6%'),
-//               fontWeight: 'bold',
-//               marginTop: hp('2%'),
-//               textTransform: 'capitalize',
-//             }}
-//           >
-//             {title}
-//           </Text>
-//         </View>
-//       </View>
-
-//       {/* 🎵 SONG LIST */}
-//       <FlatList
-//         data={songs}
-//         keyExtractor={(item, index) => item.id + '-' + index}
-//         showsVerticalScrollIndicator={false}
-//         contentContainerStyle={{ paddingBottom: hp('10%') }}
-//         renderItem={({ item, index }) => (
-//           <TouchableOpacity
-//             onPress={() => playSong(item, songs, index)}
-//           >
-//             <View
-//               style={{
-//                 flexDirection: 'row',
-//                 alignItems: 'center',
-//                 marginBottom: hp('2%'),
-//                 backgroundColor: 'rgba(255,255,255,0.1)',
-//                 borderRadius: wp('3%'),
-//                 padding: wp('2%'),
-//               }}
-//             >
-//               {/* 🎧 Image */}
-//               <Image
-//                 source={{ uri: item.image_url }}
-//                 style={{
-//                   width: wp('15%'),
-//                   height: wp('15%'),
-//                   borderRadius: wp('3%'),
-//                 }}
-//               />
-
-//               {/* 🎵 Info */}
-//               <View style={{ marginLeft: wp('4%'), flex: 1 }}>
-//                 <Text style={{ color: '#fff', fontSize: wp('4%') }}>
-//                   {item.title}
-//                 </Text>
-
-//                 <Text style={{ color: '#eee', fontSize: wp('3.5%') }}>
-//                   {item.artist}
-//                 </Text>
-//               </View>
-
-//               {/* ⋮ */}
-//               <Icon name="ellipsis-vertical" size={wp('5%')} color="#fff" />
-//             </View>
-//           </TouchableOpacity>
-//         )}
-//       />
-//     </LinearGradient>
-//   );
-// }
-
-
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -174,7 +23,7 @@ export default function CategoryScreen({ route, navigation }) {
 
   const [songs, setSongs] = useState([]);
 
-  // 🎯 FETCH DATA
+  //  FETCH DATA
   useEffect(() => {
     if (type === 'playlist') {
       fetchPlaylistSongs();
@@ -183,7 +32,7 @@ export default function CategoryScreen({ route, navigation }) {
     }
   }, []);
 
-  // 🎵 CATEGORY SONGS
+  //  CATEGORY SONGS
   const fetchCategorySongs = async () => {
     const { data } = await supabase
       .from('songs_with_category')
@@ -193,7 +42,7 @@ export default function CategoryScreen({ route, navigation }) {
     setSongs(data || []);
   };
 
-  // 🎵 PLAYLIST SONGS
+  //  PLAYLIST SONGS
   const fetchPlaylistSongs = async () => {
     const { data, error } = await supabase
       .from('playlist_songs')
@@ -215,7 +64,7 @@ export default function CategoryScreen({ route, navigation }) {
     }
   };
 
-  // 🎯 TITLE
+  //  TITLE
   const title = type === 'playlist' ? playlist.name : category;
 
   return (
@@ -227,18 +76,18 @@ export default function CategoryScreen({ route, navigation }) {
         paddingHorizontal: wp('4%'),
       }}
     >
-      {/* 🔥 HEADER */}
+      {/*  HEADER */}
       <View style={{ marginBottom: hp('2%') }}>
         
-        {/* ⬅️ BACK */}
+        {/*  BACK */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={wp('7%')} color="#fff" />
         </TouchableOpacity>
 
-        {/* 🎧 IMAGE + TITLE */}
+        {/*  IMAGE + TITLE */}
         <View style={{ alignItems: 'center', marginTop: hp('1%') }}>
 
-          {/* ✅ SAFE IMAGE */}
+          {/*  SAFE IMAGE */}
           {songs.length > 0 && (
             <Image
               source={{ uri: songs[0]?.image_url }}
@@ -250,7 +99,7 @@ export default function CategoryScreen({ route, navigation }) {
             />
           )}
 
-          {/* 🎵 TITLE */}
+          {/*  TITLE */}
           <Text
             style={{
               color: '#fff',
@@ -265,7 +114,7 @@ export default function CategoryScreen({ route, navigation }) {
         </View>
       </View>
 
-      {/* 🎵 SONG LIST */}
+      {/*  SONG LIST */}
       <FlatList
         data={songs}
         keyExtractor={(item, index) => item.id + '-' + index}
@@ -286,7 +135,7 @@ export default function CategoryScreen({ route, navigation }) {
                 padding: wp('2%'),
               }}
             >
-              {/* 🎧 IMAGE */}
+              {/*  IMAGE */}
               <Image
                 source={{ uri: item.image_url }}
                 style={{
@@ -296,7 +145,7 @@ export default function CategoryScreen({ route, navigation }) {
                 }}
               />
 
-              {/* 🎵 INFO */}
+              {/*  INFO */}
               <View style={{ marginLeft: wp('4%'), flex: 1 }}>
                 <Text
                   style={{ color: '#fff', fontSize: wp('4%') }}
