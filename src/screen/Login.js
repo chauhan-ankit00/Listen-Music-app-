@@ -5,12 +5,13 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  ImageBackground,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,107 +20,148 @@ import {
 import { supabase } from '../supabase/supabase';
 
 export default function Login({ navigation }) {
+  // ✅ STATES
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [secure, setSecure] = useState(true);
+  const [isSignup, setIsSignup] = useState(false);
 
-  //  LOGIN FUNCTION
+  // 🔐 LOGIN
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please enter email & password');
+      Alert.alert('Error', 'Enter email & password');
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
       password,
     });
 
     if (error) {
       Alert.alert('Login Error', error.message);
     } else {
-      // Alert.alert('Success', 'Logged in!');
-      console.log('User:', data.user);
-
-      //  Navigate to Home
       navigation.replace('Home');
     }
   };
 
-  //  SIGNUP FUNCTION
+  // 📝 SIGNUP
   const handleSignup = async () => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
+    if (!email || !password) {
+      Alert.alert('Error', 'Enter email & password');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Weak Password', 'Minimum 6 characters required');
+      return;
+    }
+
+    const { error } = await supabase.auth.signUp({
+      email: email.trim(),
       password,
     });
 
     if (error) {
       Alert.alert('Signup Error', error.message);
     } else {
-      Alert.alert('Success', 'Check your email for verification');
+      Alert.alert('Success', 'Account created! Now login.');
+      setIsSignup(false); // switch to login after signup
+    }
+  };
+
+  // 🔄 HANDLE BOTH
+  const handleAuth = () => {
+    if (isSignup) {
+      handleSignup();
+    } else {
+      handleLogin();
     }
   };
 
   return (
-    // <ImageBackground
-    //   source={require('../assets/background.png')}
-    //   style={styles.background}
-    // >
-     <LinearGradient colors={['#7209B7', '#3A0CA3', '#1E1E2F']} style={ styles.background }>
+    <LinearGradient
+      colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
+      style={styles.background}
+    >
       <View style={styles.container}>
 
+        {/* 🎧 LOGO */}
         <Image
           source={require('../assets/logo.png')}
           style={styles.logo}
         />
 
-        {/* Email */}
+        {/* 📧 EMAIL */}
         <View style={styles.inputBox}>
+          <Icon name="mail-outline" size={wp('5%')} color="#777" />
           <TextInput
             placeholder="Email"
-            type="email-address"
             placeholderTextColor="#777"
             style={styles.input}
             value={email}
             onChangeText={setEmail}
+            keyboardType="email-address"
           />
         </View>
 
-        {/* Password */}
+        {/* 🔑 PASSWORD */}
         <View style={styles.inputBox}>
+          <Icon name="lock-closed-outline" size={wp('5%')} color="#777" />
+
           <TextInput
             placeholder="Password"
             placeholderTextColor="#777"
-            secureTextEntry
+            secureTextEntry={secure}
             style={styles.input}
             value={password}
             onChangeText={setPassword}
           />
+
+          {/* 👁 TOGGLE */}
+          <TouchableOpacity onPress={() => setSecure(!secure)}>
+            <Icon
+              name={secure ? 'eye-off-outline' : 'eye-outline'}
+              size={wp('5%')}
+              color="#777"
+            />
+          </TouchableOpacity>
         </View>
 
-        {/* LOGIN BUTTON */}
-        <TouchableOpacity activeOpacity={0.8} onPress={handleLogin}>
+        {/* 🔘 BUTTON */}
+        <TouchableOpacity activeOpacity={0.8} onPress={handleAuth}>
           <LinearGradient
-            colors={['#F72585', '#7209B7']} 
+            colors={
+              isSignup
+                ? ['#00c6ff', '#0072ff']
+                : ['#F72585', '#7209B7']
+            }
             style={styles.button}
           >
-            <Text style={styles.buttonText}>Log In</Text>
+            <Text style={styles.buttonText}>
+              {isSignup ? 'Sign Up' : 'Log In'}
+            </Text>
           </LinearGradient>
         </TouchableOpacity>
 
         {/* Divider */}
         <Text style={styles.or}>or</Text>
 
-        {/* SIGNUP */}
-        <TouchableOpacity onPress={handleSignup}>
+        {/* 🔁 TOGGLE LOGIN / SIGNUP */}
+        <TouchableOpacity onPress={() => setIsSignup(!isSignup)}>
           <Text style={styles.signup}>
-            Don’t have an account?{' '}
-            <Text style={styles.signupText}>Sign Up</Text>
+            {isSignup
+              ? 'Already have an account? '
+              : 'Don’t have an account? '}
+
+            <Text style={styles.signupText}>
+              {isSignup ? 'Log In' : 'Sign Up'}
+            </Text>
           </Text>
         </TouchableOpacity>
 
       </View>
-     </LinearGradient>
-    // </ImageBackground>
+    </LinearGradient>
   );
 }
 
@@ -136,7 +178,7 @@ const styles = StyleSheet.create({
   logo: {
     width: wp('50%'),
     height: wp('50%'),
-    marginBottom: hp('2%'),
+    marginBottom: hp('3%'),
   },
 
   inputBox: {
@@ -146,10 +188,13 @@ const styles = StyleSheet.create({
     borderRadius: wp('10%'),
     paddingHorizontal: wp('4%'),
     marginBottom: hp('2%'),
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   input: {
+    flex: 1,
+    marginLeft: wp('2%'),
     fontSize: wp('4%'),
     color: '#000',
   },
@@ -171,16 +216,16 @@ const styles = StyleSheet.create({
   or: {
     marginVertical: hp('2%'),
     fontSize: wp('4%'),
-    color: '#555',
+    color: '#aaa',
   },
 
   signup: {
     fontSize: wp('3.8%'),
-    color: '#555',
+    color: '#aaa',
   },
 
   signupText: {
-    color: '#1e90ff',
+    color: '#F72585',
     fontWeight: 'bold',
   },
 });

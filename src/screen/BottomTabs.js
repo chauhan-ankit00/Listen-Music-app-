@@ -28,6 +28,7 @@ export default function BottomTabs() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
+          // tabBarShowLabel: false,
 
           tabBarIcon: ({ focused }) => {
             let iconName;

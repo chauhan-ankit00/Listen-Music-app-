@@ -28,7 +28,8 @@ export default function Home({ navigation }) {
   const fetchSongs = async () => {
     const { data, error } = await supabase
       .from('songs_with_category')
-      .select('*');
+      .select('*')
+      .order('created_at', { ascending: false }); //  latest first
 
     if (error) {
       console.log(error);
@@ -37,34 +38,27 @@ export default function Home({ navigation }) {
     }
   };
 
-  const getByCategory = cat => {
+  const getByCategory = (cat) => {
     return data.filter(item => item.category === cat);
   };
 
   return (
     <LinearGradient
       colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
-      style={{
-        flex: 1,
-        paddingTop: wp('7%'),
-        paddingHorizontal: wp('4%'),
-        paddingBottom: hp('8%'),
-      }}
+      style={styles.container}
     >
+      {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
-            source={require('../assets/profile.png')} //  logo path
+            source={require('../assets/profile.png')}
             style={styles.logo}
-            resizeMode="contain"
           />
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: wp('0%') }}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
+        
         {/* TOP CARDS */}
         <View style={styles.topRow}>
           <TouchableOpacity
@@ -97,24 +91,35 @@ export default function Home({ navigation }) {
         </View>
 
         {/* SECTIONS */}
-        {['trending', 'latest', 'punjabi', 'haryanvi'].map(cat => {
+        {['bhakti', 'bollywood', 'punjabi', 'haryanvi'].map(cat => {
           const songs = getByCategory(cat);
 
           if (songs.length === 0) return null;
 
           return (
             <View key={cat}>
-              <Text style={styles.title}>
-                {cat === 'latest'
-                  ? 'Latest Release'
-                  : cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </Text>
 
+              {/*  TITLE + SHOW ALL */}
+              <View style={styles.rowBetween}>
+                <Text style={styles.title}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </Text>
+
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Category', { category: cat })
+                  }
+                >
+                  <Text style={styles.showAll}>Show All</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* 🎵 SONG LIST */}
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {songs.map((item, index) => (
                   <TouchableOpacity
                     key={item.id}
-                    onPress={() => playSong(item, songs, index)} // FIX
+                    onPress={() => playSong(item, songs, index)}
                   >
                     <View style={styles.card}>
                       <Image
@@ -128,6 +133,7 @@ export default function Home({ navigation }) {
                   </TouchableOpacity>
                 ))}
               </ScrollView>
+
             </View>
           );
         })}
@@ -137,6 +143,13 @@ export default function Home({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: wp('7%'),
+    paddingHorizontal: wp('4%'),
+    paddingBottom: hp('8%'),
+  },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -147,6 +160,7 @@ const styles = StyleSheet.create({
     width: wp('10%'),
     height: wp('10%'),
   },
+
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -169,15 +183,27 @@ const styles = StyleSheet.create({
     borderRadius: wp('2%'),
   },
 
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: hp('2%'),
+  },
+
   title: {
     color: '#fff',
     fontSize: wp('5%'),
     fontWeight: 'bold',
-    marginVertical: hp('2%'),
+  },
+
+  showAll: {
+    color: '#fff',
+    fontSize: wp('3.5%'),
   },
 
   card: {
     marginRight: wp('3%'),
+    marginTop: hp('1%'),
   },
 
   image: {

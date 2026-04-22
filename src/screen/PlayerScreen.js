@@ -199,8 +199,8 @@ export default function PlayerScreen() {
       }}
     >
       {!song.id ? (
-        <View style={{ flex:1, justifyContent:'center', alignItems:'center' }}>
-          <Text style={{ color:'#fff', fontSize: wp('5%') }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: wp('5%') }}>
             No song playing 🎧
           </Text>
         </View>
@@ -232,17 +232,25 @@ export default function PlayerScreen() {
 
           {/* TITLE */}
           <Text style={{
-            color:'#fff',
+            color: '#fff',
             fontSize: wp('5%'),
             marginTop: hp('2%'),
-            textAlign:'center'
+            textAlign: 'center'
           }}>
             {song.title}
+          </Text>
+          <Text style={{
+            color: '#fff',
+            fontSize: wp('3%'),
+            marginTop: hp('2%'),
+            textAlign: 'center'
+          }}>
+            {song.artist}
           </Text>
 
           {/* ❤️ + ➕ */}
           <View style={{
-            flexDirection:'row',
+            flexDirection: 'row',
             marginTop: hp('2%'),
           }}>
             <TouchableOpacity onPress={handleLike}>
@@ -266,7 +274,7 @@ export default function PlayerScreen() {
 
           {/* SLIDER */}
           <Slider
-            style={{ width:'100%', marginTop: hp('3%') }}
+            style={{ width: '100%', marginTop: hp('3%') }}
             minimumValue={0}
             maximumValue={duration || 1}
             value={progress}
@@ -275,39 +283,39 @@ export default function PlayerScreen() {
 
           {/* TIME */}
           <View style={{
-            flexDirection:'row',
-            justifyContent:'space-between',
-            width:'100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
           }}>
-            <Text style={{ color:'#fff', fontSize: wp('3.5%') }}>
+            <Text style={{ color: '#fff', fontSize: wp('3.5%') }}>
               {formatTime(progress)}
             </Text>
-            <Text style={{ color:'#fff', fontSize: wp('3.5%') }}>
+            <Text style={{ color: '#fff', fontSize: wp('3.5%') }}>
               {formatTime(duration)}
             </Text>
           </View>
 
           {/* CONTROLS */}
           <View style={{
-            flexDirection:'row',
+            flexDirection: 'row',
             marginTop: hp('5%'),
-            alignItems:'center'
+            alignItems: 'center'
           }}>
             <TouchableOpacity onPress={prevSong}>
-              <Text style={{ fontSize: wp('8%'), color:'#fff' }}>⏮</Text>
+              <Text style={{ fontSize: wp('8%'), color: '#fff' }}>⏮</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={isPlaying ? pauseSong : resumeSong}
               style={{ marginHorizontal: wp('10%') }}
             >
-              <Text style={{ fontSize: wp('10%'), color:'#fff' }}>
+              <Text style={{ fontSize: wp('10%'), color: '#fff' }}>
                 {isPlaying ? '❚❚' : '▶'}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={nextSong}>
-              <Text style={{ fontSize: wp('8%'), color:'#fff' }}>⏭</Text>
+              <Text style={{ fontSize: wp('8%'), color: '#fff' }}>⏭</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -315,26 +323,47 @@ export default function PlayerScreen() {
 
       {/* MODAL */}
       <Modal visible={modalVisible} transparent>
-        <View style={{
-          flex:1,
-          backgroundColor: 'rgba(0,0,0,0.4)',
-          justifyContent:'center'
-        }}>
-          <View style={{
+        <View
+          style={{
+            flex: 1,
             backgroundColor: 'rgba(0,0,0,0.4)',
-            margin: wp('5%'),
-            borderRadius: wp('3%'),
-            padding: wp('5%')
-          }}>
-            <Text style={{
-              fontSize: wp('5%'),
-              marginBottom: hp('2%'), 
-              color:'#fff'
-            }}>
-              Select Playlist
-            </Text> 
-            
+            justifyContent: 'center',
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              margin: wp('5%'),
+              borderRadius: wp('3%'),
+              padding: wp('5%'),
+            }}
+          >
 
+            {/* ❌ CLOSE BUTTON */}
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={{
+                position: 'absolute',
+                top: wp('3%'),
+                right: wp('3%'),
+                zIndex: 10,
+                padding: wp('2%'),
+              }}
+            >
+              <Icon name="close" size={wp('6%')} color="#fff" />
+            </TouchableOpacity>
+
+            <Text
+              style={{
+                fontSize: wp('5%'),
+                marginBottom: hp('2%'),
+                color: '#fff',
+              }}
+            >
+              Select Playlist
+            </Text>
+
+            {/* 🎵 PLAYLIST LIST */}
             <FlatList
               data={playlists}
               keyExtractor={(item) => item.id}
@@ -343,16 +372,21 @@ export default function PlayerScreen() {
                   onPress={() => handleAddToPlaylist(item.id)}
                   style={{ paddingVertical: hp('1%') }}
                 >
-                  <Text style={{ fontSize: wp('4%'),color:'#fff', borderBottomWidth:1, borderColor:'#292828',  }}>
+                  <Text
+                    style={{
+                      fontSize: wp('4%'),
+                      color: '#fff',
+                      borderBottomWidth: 1,
+                      borderColor: '#292828',
+                      paddingBottom: hp('1%'),
+                    }}
+                  >
                     {item.name}
                   </Text>
                 </TouchableOpacity>
               )}
             />
 
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={{ marginTop: hp('2%'),color:'#fff' }}>Cancel</Text>
-            </TouchableOpacity> 
           </View>
         </View>
       </Modal>

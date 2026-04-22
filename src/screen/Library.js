@@ -23,7 +23,7 @@ import { supabase } from '../supabase/supabase';
 
 export default function Library({ navigation }) {
 
-  
+
   const [modalVisible, setModalVisible] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
   const [playlists, setPlaylists] = useState([]);
@@ -112,9 +112,12 @@ export default function Library({ navigation }) {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('Category', {
-                type: 'playlist',
-                playlist: item,
+              navigation.navigate('Home', {
+                screen:'Category',
+                params: { 
+                  type: 'playlist',
+                  playlist:item,
+                }
               })
             }
           >
@@ -141,26 +144,29 @@ export default function Library({ navigation }) {
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
 
+            {/* ❌ CLOSE ICON */}
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={styles.closeBtn}
+            >
+              <Icon name="close" size={wp('6%')} color="#fff" />
+            </TouchableOpacity>
+
             <Text style={styles.modalTitle}>Create Playlist</Text>
 
             <TextInput
               placeholder="Enter name"
-              placeholderTextColor='#fff'
+              placeholderTextColor="#fff"
               value={playlistName}
               onChangeText={setPlaylistName}
               style={styles.input}
             />
+
             <LinearGradient colors={['#F72585', '#7209B7']} style={styles.btn}>
-              <TouchableOpacity onPress={createPlaylist} >
+              <TouchableOpacity onPress={createPlaylist}>
                 <Text style={{ color: '#fff' }}>Create</Text>
               </TouchableOpacity>
             </LinearGradient>
-
-
-
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={{ marginTop: 10, color:'#fff' }}>Cancel</Text>
-            </TouchableOpacity>
 
           </View>
         </View>
@@ -251,9 +257,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     color: '#fff',
   },
+  closeBtn: {
+    position: 'absolute',
+    top: wp('3%'),
+    right: wp('3%'),
+    zIndex: 10,
+  },
 
   btn: {
-    
+
     padding: 10,
     borderRadius: 8,
     marginTop: 10,
