@@ -5,11 +5,12 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Alert } from 'react-native';
+
 import { supabase } from '../supabase/supabase';
 import { playSong } from './utils/player';
 
@@ -23,7 +24,10 @@ export default function CategoryScreen({ route, navigation }) {
 
   const [songs, setSongs] = useState([]);
 
-  //  FETCH DATA
+  // 🔥 MODAL STATE
+  const [removeModal, setRemoveModal] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+
   useEffect(() => {
     if (type === 'playlist') {
       fetchPlaylistSongs();
@@ -32,17 +36,18 @@ export default function CategoryScreen({ route, navigation }) {
     }
   }, []);
 
-  //  CATEGORY SONGS
+  // 🎵 CATEGORY SONGS
   const fetchCategorySongs = async () => {
     const { data } = await supabase
       .from('songs_with_category')
       .select('*')
       .eq('category', category)
-      .order('created_at', { ascending: false }); //  latest first
+      .order('created_at', { ascending: false });
 
     setSongs(data || []);
   };
-  //  PLAYLIST SONGS
+
+  // 🎵 PLAYLIST SONGS
   const fetchPlaylistSongs = async () => {
     const { data, error } = await supabase
       .from('playlist_songs')
@@ -61,27 +66,41 @@ export default function CategoryScreen({ route, navigation }) {
     if (!error && data) {
       const formatted = data
         .map(item => item.songs)
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // 🔥 latest first
+        .filter(Boolean); // ✅ prevent crash
 
       setSongs(formatted);
     }
   };
-  // remove the song from playlist
-  const removeFromPlaylist = async (songId) => {
-    const { error } = await supabase
-      .from('playlist_songs')
-      .delete()
-      .eq('playlist_id', playlist.id)
-      .eq('song_id', songId);
 
-    if (error) {
-      console.log(error);
-    } else {
-      // ✅ Update UI instantly
-      setSongs(prev => prev.filter(item => item.id !== songId));
+  // ❌ REMOVE SONG
+  const removeFromPlaylist = async () => {
+    try {
+      if (!playlist?.id || !selectedSong) return;
+
+      const { error } = await supabase
+        .from('playlist_songs')
+        .delete()
+        .eq('playlist_id', playlist.id)
+        .eq('song_id', selectedSong.id);
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      // ✅ update UI instantly
+      setSongs(prev =>
+        prev.filter(item => item.id !== selectedSong.id)
+      );
+
+      setRemoveModal(false);
+      setSelectedSong(null);
+
+    } catch (err) {
+      console.log(err);
     }
   };
-  //  TITLE
+
   const title = type === 'playlist' ? playlist.name : category;
 
   return (
@@ -93,18 +112,15 @@ export default function CategoryScreen({ route, navigation }) {
         paddingHorizontal: wp('4%'),
       }}
     >
-      {/*  HEADER */}
+
+      {/* 🔥 HEADER */}
       <View style={{ marginBottom: hp('2%') }}>
 
-        {/*  BACK */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={wp('7%')} color="#fff" />
         </TouchableOpacity>
 
-        {/*  IMAGE + TITLE */}
         <View style={{ alignItems: 'center', marginTop: hp('1%') }}>
-
-          {/*  SAFE IMAGE */}
           {songs.length > 0 && (
             <Image
               source={{ uri: songs[0]?.image_url }}
@@ -116,7 +132,6 @@ export default function CategoryScreen({ route, navigation }) {
             />
           )}
 
-          {/*  TITLE */}
           <Text
             style={{
               color: '#fff',
@@ -131,7 +146,7 @@ export default function CategoryScreen({ route, navigation }) {
         </View>
       </View>
 
-      {/*  SONG LIST */}
+      {/* 🎵 SONG LIST */}
       <FlatList
         data={songs}
         keyExtractor={(item, index) => item.id + '-' + index}
@@ -152,7 +167,7 @@ export default function CategoryScreen({ route, navigation }) {
                 padding: wp('2%'),
               }}
             >
-              {/*  IMAGE */}
+
               <Image
                 source={{ uri: item.image_url }}
                 style={{
@@ -162,12 +177,8 @@ export default function CategoryScreen({ route, navigation }) {
                 }}
               />
 
-              {/*  INFO */}
               <View style={{ marginLeft: wp('4%'), flex: 1 }}>
-                <Text
-                  style={{ color: '#fff', fontSize: wp('4%') }}
-                  numberOfLines={1}
-                >
+                <Text style={{ color: '#fff', fontSize: wp('4%') }} numberOfLines={1}>
                   {item.title}
                 </Text>
 
@@ -183,45 +194,103 @@ export default function CategoryScreen({ route, navigation }) {
                 </Text>
               </View>
 
-              {/* ⋮ OPTIONS */}
+              {/* ⋮ MENU */}
               <TouchableOpacity
                 onPress={(e) => {
                   e.stopPropagation();
 
                   if (type === 'playlist') {
-                    Alert.alert(
-                      item.title,
-                      
-                      [
-                        {
-                          text: 'Remove from Playlist',
-                          
-                          onPress: () => removeFromPlaylist(item.id),
-                          style: 'destructive',
-
-                        },
-                        {
-                          text: 'Cancel',
-                          style: 'cancel',
-                        },
-                      ]
-                    );
+                    setSelectedSong(item);
+                    setRemoveModal(true);
                   }
                 }}
               >
-                <Icon
-                  name="ellipsis-vertical"
-                  size={wp('5%')}
-                  color="#fff"
-                />
+                <Icon name="ellipsis-vertical" size={wp('5%')} color="#fff" />
               </TouchableOpacity>
+
             </View>
           </TouchableOpacity>
         )}
       />
+
+      {/* 🔥 REMOVE MODAL */}
+      <Modal visible={removeModal} transparent animationType="fade">
+        <View style={styles.modalContainer}>
+          
+          <View style={styles.modalBox}>
+
+            {/* ❌ CLOSE */}
+            <TouchableOpacity
+              onPress={() => setRemoveModal(false)}
+              style={styles.closeBtn}
+            >
+              <Icon name="close" size={wp('6%')} color="#fff" />
+            </TouchableOpacity>
+
+            <Text style={styles.modalTitle}>
+              Remove from Playlist
+            </Text>
+
+            <Text style={styles.modalSubtitle}>
+              {selectedSong?.title}
+            </Text>
+            <LinearGradient colors={['#F72585', '#7209B7']} style={styles.removeBtn}>
+              <TouchableOpacity onPress={removeFromPlaylist}>
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>
+                Remove
+              </Text>
+            </TouchableOpacity>
+            </LinearGradient>
+
+            
+
+          </View>
+
+        </View>
+      </Modal>
+
     </LinearGradient>
   );
 }
 
+const styles = {
+  modalContainer: {
+    flex: 1,
+   backgroundColor: '#00000088',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
+  modalBox: {
+    width: wp('85%'),
+   backgroundColor: 'rgba(0,0,0,0.4)',
+    borderRadius: wp('5%'),
+    padding: wp('5%'),
+  },
 
+  modalTitle: {
+    color: '#fff',
+    fontSize: wp('5%'),
+    textAlign: 'center',
+    marginBottom: hp('1%'),
+  },
+
+  modalSubtitle: {
+    color: '#aaa',
+    textAlign: 'center',
+    marginBottom: hp('3%'),
+  },
+
+  removeBtn: {
+    backgroundColor: '#ff4d4d',
+    padding: wp('3%'),
+    borderRadius: wp('3%'),
+    alignItems: 'center',
+  },
+
+  closeBtn: {
+    position: 'absolute',
+    top: wp('3%'),
+    right: wp('3%'),
+  },
+};
