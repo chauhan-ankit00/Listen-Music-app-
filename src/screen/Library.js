@@ -28,6 +28,15 @@ export default function Library({ navigation }) {
   const [playlistName, setPlaylistName] = useState('');
   const [playlists, setPlaylists] = useState([]);
 
+  //  GREETING
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour < 12) return 'Good Morning ☀️';
+    if (hour < 18) return 'Good Afternoon 🌤️';
+    return 'Good Evening 🌙';
+  };
+
   //  FETCH PLAYLISTS
   useEffect(() => {
     fetchPlaylists();
@@ -82,10 +91,12 @@ export default function Library({ navigation }) {
       colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
       style={styles.container}
     >
-      {/*  HEADER */}
+
+
+      {/* HEADER */}
       <View style={styles.header}>
 
-        {/*  Profile */}
+        {/* 👤 PROFILE */}
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
             source={require('../assets/profile.png')}
@@ -93,14 +104,22 @@ export default function Library({ navigation }) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Library</Text>
+        {/* 👋 GREETING */}
+        <View style={{ flex: 1, marginLeft: wp('3%') }}>
+          <Text style={styles.greeting}>
+            {getGreeting()}
+          </Text>
 
-        <View style={{ flex: 1 }} />
+          <Text style={styles.username}>
+            Welcome back 🎧
+          </Text>
+        </View>
 
-        {/*  ADD BUTTON */}
+        {/* 🔍 SEARCH ICON */}
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Icon name="add" size={wp('7%')} color="#fff" />
+          <Icon name="add" size={wp('6%')} color="#fff" />
         </TouchableOpacity>
+
       </View>
 
       {/*  PLAYLIST LIST */}
@@ -113,10 +132,10 @@ export default function Library({ navigation }) {
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('Home', {
-                screen:'Category',
-                params: { 
+                screen: 'Category',
+                params: {
                   type: 'playlist',
-                  playlist:item,
+                  playlist: item,
                 }
               })
             }
@@ -191,13 +210,19 @@ const styles = StyleSheet.create({
   logo: {
     width: wp('10%'),
     height: wp('10%'),
+    borderRadius: wp('5%'),
   },
 
-  headerTitle: {
+  greeting: {
     color: '#fff',
-    fontSize: wp('5.5%'),
+    fontSize: wp('4.2%'),
     fontWeight: 'bold',
-    marginLeft: wp('3%'),
+  },
+
+  username: {
+    color: '#aaa',
+    fontSize: wp('3.3%'),
+    marginTop: hp('0.2%'),
   },
 
   // 🎵 PLAYLIST UI

@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { supabase } from '../supabase/supabase';
@@ -25,6 +26,14 @@ export default function Home({ navigation }) {
     fetchSongs();
   }, []);
 
+  //Greeting based on time:
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour < 12) return 'Good Morning ☀️';
+    if (hour < 18) return 'Good Afternoon 🌤️';
+    return 'Good Evening 🌙';
+  };
   const fetchSongs = async () => {
     const { data, error } = await supabase
       .from('songs_with_category')
@@ -49,46 +58,87 @@ export default function Home({ navigation }) {
     >
       {/* HEADER */}
       <View style={styles.header}>
+
+        {/* 👤 PROFILE */}
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
             source={require('../assets/profile.png')}
             style={styles.logo}
           />
         </TouchableOpacity>
+
+        {/* 👋 GREETING */}
+        <View style={{ flex: 1, marginLeft: wp('3%') }}>
+          <Text style={styles.greeting}>
+            {getGreeting()}
+          </Text>
+
+          <Text style={styles.username}>
+            Welcome back 🎧
+          </Text>
+        </View>
+
+        {/* 🔍 SEARCH ICON */}
+        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+          <Icon name="search-outline" size={wp('6%')} color="#fff" />
+        </TouchableOpacity>
+
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        
+
         {/* TOP CARDS */}
-        <View style={styles.topRow}>
+        <View>
+
+          {/* CARD 1 */}
           <TouchableOpacity
+            style={styles.rowCard}
             onPress={() =>
               navigation.navigate('Category', { category: 'pop mix' })
             }
           >
             <ImageBackground
               source={{ uri: getByCategory('pop mix')[0]?.image_url }}
-              style={styles.bigCard}
+              style={styles.rowImage}
               imageStyle={styles.radius}
-            >
-              <Text style={styles.bigText}>Pop Mix</Text>
-            </ImageBackground>
+            />
+
+            <Text style={styles.rowText}>Explore the Pop Mix vibes</Text>
           </TouchableOpacity>
 
+          {/* CARD 2 */}
           <TouchableOpacity
+            style={styles.rowCard}
             onPress={() =>
               navigation.navigate('Category', { category: 'romantic' })
             }
           >
             <ImageBackground
               source={{ uri: getByCategory('romantic')[0]?.image_url }}
-              style={styles.bigCard}
+              style={styles.rowImage}
               imageStyle={styles.radius}
-            >
-              <Text style={styles.bigText}>Romantic</Text>
-            </ImageBackground>
+            />
+
+            <Text style={styles.rowText}>Feel the Romantic mood</Text>
           </TouchableOpacity>
+          {/* CARD 3 */}
+          <TouchableOpacity
+            style={styles.rowCard}
+            onPress={() =>
+              navigation.navigate('Category', { category: 'english' })
+            }
+          >
+            <ImageBackground
+              source={{ uri: getByCategory('english')[0]?.image_url }}
+              style={styles.rowImage}
+              imageStyle={styles.radius}
+            />
+
+            <Text style={styles.rowText}>Feel the global beats</Text>
+          </TouchableOpacity>
+
         </View>
+
 
         {/* SECTIONS */}
         {['bhakti', 'bollywood', 'punjabi', 'haryanvi'].map(cat => {
@@ -153,29 +203,48 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: hp('1%'),
+    marginBottom: hp('2%'),
   },
 
   logo: {
     width: wp('10%'),
     height: wp('10%'),
+    borderRadius: wp('5%'),
   },
 
-  topRow: {
+  greeting: {
+    color: '#fff',
+    fontSize: wp('4.2%'),
+    fontWeight: 'bold',
+  },
+
+  username: {
+    color: '#aaa',
+    fontSize: wp('3.3%'),
+    marginTop: hp('0.2%'),
+  },
+
+
+
+  rowCard: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: wp('3%'),
+    padding: wp('2%'),
+    marginBottom: hp('1%'),
   },
 
-  bigCard: {
-    width: wp('44%'),
-    height: hp('18%'),
-    justifyContent: 'flex-end',
-    padding: wp('3%'),
+  rowImage: {
+    width: wp('20%'),
+    height: wp('20%'),
+    borderRadius: wp('3%'),
   },
 
-  bigText: {
+  rowText: {
     color: '#fff',
     fontSize: wp('4.5%'),
+    marginLeft: wp('4%'),
     fontWeight: 'bold',
   },
 

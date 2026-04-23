@@ -29,7 +29,14 @@ export default function Search({ navigation }) {
   useEffect(() => {
     fetchSongs();
   }, []);
+  //Greeting based on time:
+  const getGreeting = () => {
+    const hour = new Date().getHours();
 
+    if (hour < 12) return 'Good Morning ☀️';
+    if (hour < 18) return 'Good Afternoon 🌤️';
+    return 'Good Evening 🌙';
+  };
   const fetchSongs = async () => {
     const { data } = await supabase
       .from('songs_with_category')
@@ -64,8 +71,10 @@ export default function Search({ navigation }) {
       colors={['#7209B7', '#3A0CA3', '#1E1E2F']}
       style={styles.container}
     >
-      {/*  HEADER */}
+      {/* HEADER */}
       <View style={styles.header}>
+
+        {/* 👤 PROFILE */}
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
             source={require('../assets/profile.png')}
@@ -73,7 +82,22 @@ export default function Search({ navigation }) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Search</Text>
+        {/* 👋 GREETING */}
+        <View style={{ flex: 1, marginLeft: wp('3%') }}>
+          <Text style={styles.greeting}>
+            {getGreeting()}
+          </Text>
+
+          <Text style={styles.username}>
+            Welcome back 🎧
+          </Text>
+        </View>
+
+        {/* 🔍 SEARCH ICON */}
+        {/* <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+          <Icon name="search-outline" size={wp('6%')} color="#fff" />
+        </TouchableOpacity> */}
+
       </View>
 
       {/*  SEARCH BAR */}
@@ -126,7 +150,7 @@ export default function Search({ navigation }) {
             onPress={() => playSong(item, filteredSongs, index)}
           >
             <View style={styles.songRow}>
-              
+
               {/*  Image */}
               <Image
                 source={{ uri: item.image_url }}
@@ -181,13 +205,19 @@ const styles = StyleSheet.create({
   logo: {
     width: wp('10%'),
     height: wp('10%'),
+    borderRadius: wp('5%'),
   },
 
-  headerTitle: {
+  greeting: {
     color: '#fff',
-    fontSize: wp('5.5%'),
+    fontSize: wp('4.2%'),
     fontWeight: 'bold',
-    marginLeft: wp('3%'),
+  },
+
+  username: {
+    color: '#aaa',
+    fontSize: wp('3.3%'),
+    marginTop: hp('0.2%'),
   },
 
   // 🔍 SEARCH BAR
