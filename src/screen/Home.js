@@ -59,13 +59,13 @@ export default function Home({ navigation }) {
       {/* HEADER */}
       <View style={styles.header}>
 
-        {/* 👤 PROFILE */}
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        
+        
           <Image
-            source={require('../assets/profile.png')}
+            source={require('../assets/logo.png')}
             style={styles.logo}
           />
-        </TouchableOpacity>
+        
 
         {/* 👋 GREETING */}
         <View style={{ flex: 1, marginLeft: wp('3%') }}>
@@ -203,12 +203,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: hp('2%'),
+    marginBottom: hp('0%'),
   },
 
   logo: {
-    width: wp('10%'),
-    height: wp('10%'),
+    width: wp('12%'),
+    height: wp('12%'),
     borderRadius: wp('5%'),
   },
 
